@@ -1,11 +1,20 @@
 const express = require('express');
+const path = require('path');
 const app = express();
 
 let seconds = 0;
 
-app.get("/", (req, res) => {
+// Contador de segundos que lleva activo el servidor
+setInterval(() => {
   seconds++;
-  res.send(`<h1>Servidor activo ${seconds} segundos</h1>`);
+}, 1000);
+
+// Servir archivos dentro de "public"
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Ruta para enviar los segundos en JSON
+app.get("/seconds", (req, res) => {
+  res.json({ seconds });
 });
 
 const PORT = process.env.PORT || 3000;
