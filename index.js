@@ -1,40 +1,36 @@
+
 const express = require('express');
-const path = require('path');
 const fs = require('fs');
+const path = require('path');
 const app = express();
 
 const DATA_FILE = path.join(__dirname, 'seconds.json');
 
+// Leer los segundos guardados o iniciar en 0
 let seconds = 0;
-
-// Leer segundos guardados al iniciar el servidor
 if (fs.existsSync(DATA_FILE)) {
-  const data = fs.readFileSync(DATA_FILE, 'utf8');
   try {
-    const parsed = JSON.parse(data);
-    if (parsed.seconds !== undefined) {
-      seconds = parsed.seconds;
-    }
+    const data = fs.readFileSync(DATA_FILE, 'utf8');
+    seconds = JSON.parse(data).seconds || 0;
   } catch (err) {
-    console.error('Error leyendo seconds.json:', err);
+    console.error('Error leyendo seconds.json', err);
   }
 }
 
-// Contador de segundos que lleva activo el servidor
+// Incrementar cada segundo y guardar en archivo
 setInterval(() => {
   seconds++;
-  // Guardar cada segundo en el archivo
-  fs.writeFile(DATA_FILE, JSON.stringify({ seconds }), err => {
-    if (err) console.error('Error guardando seconds.json:', err);
+  fs.writeFile(DATA_FILE, JSON.stringify({ seconds }), (err) => {
+    if (err) console.error('Error guardando segundos', err);
   });
 }, 1000);
 
-// Servir archivos dentro de "public"
+// Servir archivos estáticos
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Ruta para enviar los segundos en JSON
-app.get("/seconds", (req, res) => {
-  res.json({ seconds });
+// Ruta para mostrar los segundos
+app.get('/contador', (req, res) => {
+  res.send(`<h1>Servidor activo ${seconds} segundos</h1>`);
 });
 
 const PORT = process.env.PORT || 3000;
