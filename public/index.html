@@ -1,1 +1,54 @@
-<img src="Images/Foto.jpg" alt="Mi imagen">
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página con imagen de fondo</title>
+    <style>
+        /* Quitar márgenes y que ocupe toda la pantalla */
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
+            /* Imagen de fondo */
+            background-image: url('Images/Foto.jpg');
+            background-size: cover; /* ocupa toda la pantalla */
+            background-position: center; /* centrada */
+            background-repeat: no-repeat; /* no se repita */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white; /* texto visible encima de la imagen */
+            font-family: Arial, sans-serif;
+            text-shadow: 2px 2px 4px black;
+        }
+
+        h1 {
+            font-size: 3rem;
+        }
+    </style>
+</head>
+<body>
+    <h1>Servidor activo <span id="contador">0</span> segundos</h1>
+
+    <script>
+        // Mostrar contador en tiempo real
+        async function actualizarSegundos() {
+            try {
+                const res = await fetch('/contador'); 
+                const text = await res.text();
+                // Extraer solo los números del HTML
+                const segundos = text.match(/\d+/)[0];
+                document.getElementById('contador').innerText = segundos;
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        setInterval(actualizarSegundos, 1000);
+        actualizarSegundos();
+    </script>
+</body>
+</html>
