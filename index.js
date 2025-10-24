@@ -1,4 +1,3 @@
-
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
@@ -6,7 +5,7 @@ const app = express();
 
 const DATA_FILE = path.join(__dirname, 'seconds.json');
 
-// Leer los segundos guardados o iniciar en 0
+// Leer segundos guardados o iniciar en 0
 let seconds = 0;
 if (fs.existsSync(DATA_FILE)) {
   try {
@@ -17,7 +16,7 @@ if (fs.existsSync(DATA_FILE)) {
   }
 }
 
-// Incrementar cada segundo y guardar en archivo
+// Incrementar cada segundo y guardar
 setInterval(() => {
   seconds++;
   fs.writeFile(DATA_FILE, JSON.stringify({ seconds }), (err) => {
@@ -25,12 +24,12 @@ setInterval(() => {
   });
 }, 1000);
 
-// Servir archivos estáticos
+// Servir archivos dentro de "public"
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Ruta para mostrar los segundos
+// Ruta para enviar el contador en JSON
 app.get('/contador', (req, res) => {
-  res.send(`<h1>Servidor activo ${seconds} segundos</h1>`);
+  res.json({ seconds });
 });
 
 const PORT = process.env.PORT || 3000;
