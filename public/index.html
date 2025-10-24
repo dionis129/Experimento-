@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reloj Digital Moderno con Estrellas</title>
-    <!-- Tailwind CSS para utilidades de layout -->
+    <title>Reloj Digital con Servidor Activo</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Fuente Pixel Art -->
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-    
+
     <style>
         :root {
             --color-case-dark: #333d47;
@@ -52,6 +52,26 @@
                 radial-gradient(circle at 95% 45%, #ffffff 1px, transparent 1px);
             background-size: 5px 5px, 7px 7px, 3px 3px, 6px 6px, 8px 8px, 4px 4px, 
                              9px 9px, 5px 5px, 7px 7px, 3px 3px, 6px 6px, 8px 8px, 4px 4px;
+        }
+
+        /* Banner negro arriba */
+        #banner {
+            position: absolute;
+            top: 20px;
+            width: 100%;
+            text-align: center;
+            z-index: 20;
+        }
+
+        #banner div {
+            display: inline-block;
+            background-color: black;
+            padding: 10px 20px;
+            border-radius: 10px;
+            color: var(--color-red-bright);
+            font-family: 'Press Start 2P', monospace;
+            font-size: 1rem;
+            text-shadow: 2px 2px 4px black;
         }
 
         .watch {
@@ -127,22 +147,26 @@
             filter: drop-shadow(0 0 7px var(--color-green-bright));
             text-align: center;
         }
+
     </style>
 </head>
 <body>
     <div class="stars"></div>
-    
+
+    <!-- Banner arriba -->
+    <div id="banner">
+        <div>EL SERVIDOR SIGUE FUNCIONANDO</div>
+    </div>
+
     <div class="watch">
         <div class="watch-strap strap-top"></div>
 
         <div class="watch-screen">
             <div class="power-indicator"></div>
-            
-            <!-- Aquí aparecerán los segundos del servidor -->
             <div id="time" class="time-display">00:00</div>
             <div class="seconds-label">SECONDS</div>
         </div>
-        
+
         <div class="watch-strap strap-bottom"></div>
     </div>
 
@@ -151,7 +175,7 @@
 
         async function updateTimeFromServer() {
             try {
-                const res = await fetch('/contador'); // Llama a tu servidor Node.js
+                const res = await fetch('/contador'); // Ruta de tu servidor
                 const text = await res.text();
                 const totalSeconds = parseInt(text.match(/\d+/)[0]);
 
