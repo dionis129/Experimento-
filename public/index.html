@@ -3,30 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página con imagen de fondo</title>
+    <title>Contador en Imagen</title>
     <style>
-        /* Quitar márgenes y que ocupe toda la pantalla */
         html, body {
             height: 100%;
             margin: 0;
         }
 
         body {
-            /* Imagen de fondo */
-            background-image: url('Images/Foto.jpg');
-            background-size: cover; /* ocupa toda la pantalla */
-            background-position: center; /* centrada */
-            background-repeat: no-repeat; /* no se repita */
+            background-image: url('Images/Foto.jpg'); /* Tu imagen */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
             display: flex;
             justify-content: center;
             align-items: center;
-            color: white; /* texto visible encima de la imagen */
+            color: white;
             font-family: Arial, sans-serif;
             text-shadow: 2px 2px 4px black;
+            flex-direction: column;
         }
 
         h1 {
             font-size: 3rem;
+            text-align: center;
         }
     </style>
 </head>
@@ -34,14 +34,11 @@
     <h1>Servidor activo <span id="contador">0</span> segundos</h1>
 
     <script>
-        // Mostrar contador en tiempo real
         async function actualizarSegundos() {
             try {
-                const res = await fetch('/contador'); 
-                const text = await res.text();
-                // Extraer solo los números del HTML
-                const segundos = text.match(/\d+/)[0];
-                document.getElementById('contador').innerText = segundos;
+                const res = await fetch('/contador');
+                const data = await res.json();
+                document.getElementById('contador').innerText = data.seconds;
             } catch (err) {
                 console.error(err);
             }
