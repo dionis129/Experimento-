@@ -1,23 +1,25 @@
-// Minecraft/bot.js
-const { createClient } = require('prismarine-bedrock');
+// Minecraft/Bot.js
+import { createClient } from "bedrock-protocol";
 
-function startBot() {
-  const bot = createClient({
-    host: 'dionis169-zC8z.aternos.me', // Cambia por la IP del servidor
-    port: 48842,             // Puerto de Bedrock
-    username: 'MiBot',       // Nombre del bot
-    offline: true            // True si el servidor no usa Microsoft login
+export default function startBot() {
+  const client = createClient({
+    host: "dionis169-zC8z.aternos.me", // IP o dominio de tu servidor
+    port: 48842,                        // Puerto Bedrock
+    username: "MiBotBedrock",           // Nombre del bot
+    offline: true                       // Cambia a false si el server pide login de Microsoft
   });
 
-  bot.on('spawn', () => {
-    console.log('🤖 Bot conectado correctamente!');
+  client.on("join", () => {
+    console.log("🤖 Bot conectado correctamente!");
   });
 
-  bot.on('message', (message) => {
-    console.log('💬 Chat:', message.toString());
+  client.on("text", (packet) => {
+    console.log("💬 Chat:", packet.message);
   });
 
-  return bot;
+  client.on("disconnect", () => {
+    console.log("❌ Bot desconectado del servidor.");
+  });
+
+  return client;
 }
-
-module.exports = startBot;
