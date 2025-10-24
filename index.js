@@ -36,3 +36,9 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en puerto ${PORT}`);
 });
+
+// index.js
+const startBot = require('./Minecraft/bot');
+
+// Ejecuta el bot
+startBot();
