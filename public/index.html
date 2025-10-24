@@ -3,49 +3,170 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contador en Imagen</title>
+    <title>Reloj Digital Moderno con Estrellas</title>
+    <!-- Tailwind CSS para utilidades de layout -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Fuente Pixel Art -->
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    
     <style>
-        html, body {
-            height: 100%;
-            margin: 0;
+        :root {
+            --color-case-dark: #333d47;
+            --color-strap-navy: #1f3f5f;
+            --color-screen-dark: #111111;
+            --color-red-bright: #ff3333;
+            --color-green-bright: #33ff33;
         }
 
         body {
-            background-image: url('Images/Foto.jpg'); /* Tu imagen */
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
+            font-family: 'Press Start 2P', monospace;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            color: white;
-            font-family: Arial, sans-serif;
-            text-shadow: 2px 2px 4px black;
-            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+            background: linear-gradient(180deg, #02011f 0%, #00000a 100%);
         }
 
-        h1 {
-            font-size: 3rem;
+        .stars {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.8;
+            filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.7));
+            background: 
+                radial-gradient(circle at 10% 20%, #ffffff 1px, transparent 1px),
+                radial-gradient(circle at 30% 80%, #ffffff 1px, transparent 1px),
+                radial-gradient(circle at 50% 10%, #ffffff 1px, transparent 1px),
+                radial-gradient(circle at 70% 60%, #ffffff 1px, transparent 1px),
+                radial-gradient(circle at 90% 30%, #ffffff 1px, transparent 1px),
+                radial-gradient(circle at 20% 60%, #ffffff 1px, transparent 1px),
+                radial-gradient(circle at 80% 90%, #ffffff 1px, transparent 1px),
+                radial-gradient(circle at 40% 40%, #ffffff 1px, transparent 1px),
+                radial-gradient(circle at 60% 70%, #ffffff 1px, transparent 1px),
+                radial-gradient(circle at 15% 95%, #ffffff 1px, transparent 1px),
+                radial-gradient(circle at 85% 5%, #ffffff 1px, transparent 1px),
+                radial-gradient(circle at 5% 50%, #ffffff 1px, transparent 1px),
+                radial-gradient(circle at 95% 45%, #ffffff 1px, transparent 1px);
+            background-size: 5px 5px, 7px 7px, 3px 3px, 6px 6px, 8px 8px, 4px 4px, 
+                             9px 9px, 5px 5px, 7px 7px, 3px 3px, 6px 6px, 8px 8px, 4px 4px;
+        }
+
+        .watch {
+            width: 90vw;
+            max-width: 320px;
+            position: relative;
+            z-index: 10;
+            user-select: none;
+            background-color: var(--color-case-dark);
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.9), inset 0 0 20px rgba(0,0,0,0.95);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .watch-strap {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90px;
+            height: 100px;
+            background-color: var(--color-strap-navy);
+            z-index: -1;
+            box-shadow: inset 0 0 8px rgba(0,0,0,0.6);
+            background-image: radial-gradient(circle at 50% 20%, rgba(0,0,0,0.3) 2px, transparent 2px),
+                              radial-gradient(circle at 50% 80%, rgba(0,0,0,0.3) 2px, transparent 2px);
+            background-size: 100% 50px;
+            background-repeat: repeat-y;
+        }
+        .strap-top { top: -100px; border-top-left-radius: 15px; border-top-right-radius: 15px; }
+        .strap-bottom { bottom: -100px; border-bottom-left-radius: 15px; border-bottom-right-radius: 15px; }
+
+        .watch-screen {
+            background-color: var(--color-screen-dark);
+            border: 3px solid #000;
+            width: 100%;
+            aspect-ratio: 2.2 / 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            border-radius: 0.5rem;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.98);
+            padding: 5px;
+        }
+
+        .power-indicator {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            width: 12px;
+            height: 4px;
+            background-color: var(--color-green-bright);
+            box-shadow: 0 0 8px var(--color-green-bright);
+            border-radius: 2px;
+        }
+
+        .time-display {
+            color: var(--color-red-bright);
+            font-size: 2.8rem;
+            line-height: 1.2;
+            margin-bottom: 0.5rem;
+            filter: drop-shadow(0 0 12px var(--color-red-bright));
+            text-align: center;
+        }
+
+        .seconds-label {
+            color: var(--color-green-bright);
+            font-size: 0.8rem;
+            filter: drop-shadow(0 0 7px var(--color-green-bright));
             text-align: center;
         }
     </style>
 </head>
 <body>
-    <h1>Servidor activo <span id="contador">0</span> segundos</h1>
+    <div class="stars"></div>
+    
+    <div class="watch">
+        <div class="watch-strap strap-top"></div>
+
+        <div class="watch-screen">
+            <div class="power-indicator"></div>
+            
+            <!-- Aquí aparecerán los segundos del servidor -->
+            <div id="time" class="time-display">00:00</div>
+            <div class="seconds-label">SECONDS</div>
+        </div>
+        
+        <div class="watch-strap strap-bottom"></div>
+    </div>
 
     <script>
-        async function actualizarSegundos() {
+        const timeDisplay = document.getElementById('time');
+
+        async function updateTimeFromServer() {
             try {
-                const res = await fetch('/contador');
-                const data = await res.json();
-                document.getElementById('contador').innerText = data.seconds;
+                const res = await fetch('/contador'); // Llama a tu servidor Node.js
+                const text = await res.text();
+                const totalSeconds = parseInt(text.match(/\d+/)[0]);
+
+                const minutes = Math.floor(totalSeconds / 60) % 100;
+                const seconds = totalSeconds % 60;
+
+                const pad = (num) => num.toString().padStart(2, '0');
+                timeDisplay.textContent = `${pad(minutes)}:${pad(seconds)}`;
             } catch (err) {
                 console.error(err);
             }
         }
 
-        setInterval(actualizarSegundos, 1000);
-        actualizarSegundos();
+        setInterval(updateTimeFromServer, 1000);
+        updateTimeFromServer();
     </script>
 </body>
 </html>
