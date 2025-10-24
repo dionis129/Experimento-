@@ -2,24 +2,45 @@
 import { createClient } from "bedrock-protocol";
 
 export default function startBot() {
-  const client = createClient({
-    host: "dionis169-zC8z.aternos.me", // IP o dominio de tu servidor
-    port: 48842,                        // Puerto Bedrock
-    username: "MiBotBedrock",           // Nombre del bot
-    offline: true                       // Cambia a false si el server pide login de Microsoft
-  });
+  function connectBot() {
+    console.log("⏳ Intentando conectar el bot...");
 
-  client.on("join", () => {
-    console.log("🤖 Bot conectado correctamente!");
-  });
+    const client = createClient({
+      host: "dionis169-zC8z.aternos.me", // IP o dominio de tu servidor
+      port: 48842,                        // Puerto Bedrock
+      username: "MiBotBedrock",           // Nombre del bot
+      offline: true                       // Cambia a false si el server pide login de Microsoft
+    });
 
-  client.on("text", (packet) => {
-    console.log("💬 Chat:", packet.message);
-  });
+    // Conexión exitosa
+    client.on("join", () => {
+      console.log("🤖 Bot conectado correctamente!");
+    });
 
-  client.on("disconnect", () => {
-    console.log("❌ Bot desconectado del servidor.");
-  });
+    // Mensajes del chat
+    client.on("text", (packet) => {
+      console.log("💬 Chat:", packet.message);
+    });
 
-  return client;
+    // Desconexión
+    client.on("disconnect", () => {
+      console.log("❌ Bot desconectado del servidor. Reintentando en 10 segundos...");
+      setTimeout(connectBot, 10000); // Reintento automático
+    });
+
+    // Manejo de errores
+    client.on("error", (err) => {
+      console.log("⚠️ Error del bot:", err.message);
+
+      if (err.message.includes("Ping timed out")) {
+        console.log("🔁 Servidor no responde, reintentando en 15 segundos...");
+        setTimeout(connectBot, 15000); // Reintento automático
+      }
+    });
+
+    return client;
+  }
+
+  // Iniciar la primera conexión
+  connectBot();
 }
