@@ -1,11 +1,14 @@
+// index.js
+
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const app = express();
 
+// ✅ 1. Archivo donde se guardan los segundos
 const DATA_FILE = path.join(__dirname, 'seconds.json');
 
-// Leer segundos guardados o iniciar en 0
+// ✅ 2. Leer segundos guardados o iniciar en 0
 let seconds = 0;
 if (fs.existsSync(DATA_FILE)) {
   try {
@@ -16,7 +19,7 @@ if (fs.existsSync(DATA_FILE)) {
   }
 }
 
-// Incrementar cada segundo y guardar
+// ✅ 3. Incrementar contador y guardar cada segundo
 setInterval(() => {
   seconds++;
   fs.writeFile(DATA_FILE, JSON.stringify({ seconds }), (err) => {
@@ -24,21 +27,20 @@ setInterval(() => {
   });
 }, 1000);
 
-// Servir archivos dentro de "public"
+// ✅ 4. Servir archivos estáticos desde "public"
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Ruta para enviar el contador en JSON
+// ✅ 5. Ruta para enviar el contador actual
 app.get('/contador', (req, res) => {
   res.json({ seconds });
 });
 
+// ✅ 6. Iniciar el servidor Express
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en puerto ${PORT}`);
 });
 
-// index.js
-const startBot = require('./Minecraft/bot');
-
-// Ejecuta el bot
+// ✅ 7. Cargar y ejecutar el bot de Minecraft
+const startBot = require('./Minecraft/Bot');
 startBot();
