@@ -3,8 +3,8 @@ const { createClient } = require('prismarine-bedrock');
 
 function startBot() {
   const bot = createClient({
-    host: 'IP_DEL_SERVIDOR', // Cambia por la IP del servidor
-    port: 19132,             // Puerto de Bedrock
+    host: 'dionis169-zC8z.aternos.me', // Cambia por la IP del servidor
+    port: 48842,             // Puerto de Bedrock
     username: 'MiBot',       // Nombre del bot
     offline: true            // True si el servidor no usa Microsoft login
   });
