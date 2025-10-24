@@ -13,24 +13,33 @@ export default function startBot() {
       offline: true
     });
 
+    let lastPacketTime = Date.now(); // Tiempo del último paquete recibido
+
     // ✅ Cuando el bot aparece en el mundo
     client.on("join", () => {
       console.log("🤖 Bot conectado correctamente!");
       startAntiAFK(client); // Activamos AntiAFK
-
-      // Verificar periódicamente si el bot sigue dentro del servidor
-      setInterval(() => {
-        if (!client || !client.spawned) {
-          console.log("❌ Bot no está dentro del servidor!");
-          // Aquí puedes agregar envío de correo si quieres
-        } else {
-          console.log("🟢 Bot sigue dentro del servidor, activo.");
-        }
-      }, 10000); // cada 10 segundos
     });
 
-    // Chat del servidor
-    client.on("text", (packet) => console.log("💬 Chat:", packet.message));
+    // Chat del servidor → actualiza el último paquete recibido
+    client.on("text", (packet) => {
+      console.log("💬 Chat:", packet.message);
+      lastPacketTime = Date.now();
+    });
+
+    // Movimiento → actualiza el último paquete recibido
+    client.on("move", () => {
+      lastPacketTime = Date.now();
+    });
+
+    // Verificación periódica de actividad real en el servidor
+    setInterval(() => {
+      if (Date.now() - lastPacketTime > 20000) { // si no recibe paquetes en 20s
+        console.log("❌ Parece que el bot no está recibiendo datos del servidor!");
+      } else {
+        console.log("🟢 Bot sigue activo en el servidor.");
+      }
+    }, 10000); // cada 10 segundos
 
     // Desconexión
     client.on("disconnect", () => {
