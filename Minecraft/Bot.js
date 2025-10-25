@@ -6,8 +6,8 @@ export default function startBot() {
     console.log("⏳ Intentando conectar el bot...");
 
     const client = createClient({
-      host: "dionis169-zC8z.aternos.me", // tu dirección del server
-      port: 48842,                       // puerto del server
+      host: "dionis169.aternos.me", // tu dirección del server
+      port: 30590,                       // puerto del server
       username: "MiBotBedrock",          // nombre del bot
       offline: true,                     // modo sin Xbox
       version: "1.21.111",               // versión de tu server
