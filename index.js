@@ -15,16 +15,14 @@ if (fs.existsSync(DATA_FILE)) {
   try {
     const data = fs.readFileSync(DATA_FILE, "utf8");
     seconds = JSON.parse(data).seconds || 0;
-  } catch (err) {
-    console.error("Error leyendo seconds.json", err);
+  } catch {
+    seconds = 0;
   }
 }
 
 setInterval(() => {
   seconds++;
-  fs.writeFile(DATA_FILE, JSON.stringify({ seconds }), (err) => {
-    if (err) console.error("Error guardando segundos", err);
-  });
+  fs.writeFileSync(DATA_FILE, JSON.stringify({ seconds }));
 }, 1000);
 
 app.use(express.static(path.join(__dirname, "public")));
@@ -34,8 +32,6 @@ app.get("/contador", (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`🌐 Servidor corriendo en puerto ${PORT}`);
-});
+app.listen(PORT, () => console.log(`🌐 Servidor corriendo en puerto ${PORT}`));
 
 startBot();
