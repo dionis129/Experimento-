@@ -1,45 +1,25 @@
-import { createClient } from "bedrock-protocol";
+import { createBot } from "mineflayer-bedrock";
 import startAntiAFK from "./AntiAFK.js";
 
 export default function startBot() {
-  function connectBot() {
-    console.log("⏳ Intentando conectar el bot...");
+  console.log("⏳ Intentando conectar bot Bedrock...");
 
-    const client = createClient({
-      host: "dionis169.aternos.me", // tu dirección del server
-      port: 30590,                       // puerto del server
-      username: "MiBotBedrock",          // nombre del bot
-      offline: true,                     // modo sin Xbox
-      version: "1.21.111",               // versión de tu server
-    });
+  const bot = createBot({
+    host: "dionis169.aternos.me",
+    port: 30590,
+    username: "MiBotBedrock",
+    version: "1.21.111",
+  });
 
-    client.on("join", () => {
-      console.log("🤖 Bot conectado correctamente al servidor!");
-    });
+  bot.once("spawn", () => {
+    console.log("✅ Bot Bedrock conectado y dentro del mundo!");
+    startAntiAFK(bot);
+  });
 
-    client.on("start_game", (packet) => {
-      console.log("✅ Mundo cargado, posición inicial:", packet.player_position);
-      startAntiAFK(client);
-    });
+  bot.on("error", (err) => console.log("⚠️ Error:", err.message));
 
-    client.on("text", (packet) => console.log("💬 Chat:", packet.message));
-
-    client.on("disconnect", () => {
-      console.log("❌ Bot desconectado. Reintentando en 10 segundos...");
-      setTimeout(connectBot, 10000);
-    });
-
-    client.on("error", (err) => {
-      if (err.message.includes("Ping timed out")) {
-        console.log("🔁 Servidor no responde, reintentando en 15 segundos...");
-        setTimeout(connectBot, 15000);
-      } else {
-        console.log("⚠️ Error:", err.message);
-      }
-    });
-
-    return client;
-  }
-
-  connectBot();
+  bot.on("end", () => {
+    console.log("❌ Bot desconectado, reintentando...");
+    setTimeout(startBot, 10000);
+  });
 }
