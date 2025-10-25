@@ -9,7 +9,8 @@ export default function startBot() {
       host: "dionis169.aternos.me",
       port: 14009,
       username: "MiBotBedrock",
-      offline: true
+      offline: true,
+      version: "1.21.111.1" // 👈 Versión agregada aquí
     });
 
     client.on("join", () => {
