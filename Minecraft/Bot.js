@@ -10,7 +10,7 @@ export default function startBot() {
       port: 48842,
       username: "MiBotBedrock",
       offline: true,
-      version: "1.21.111.1" // 👈 Versión agregada aquí
+      version: "1.21.111" // 👈 Versión agregada aquí
     });
 
     client.on("join", () => {
