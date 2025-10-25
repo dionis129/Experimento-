@@ -1,23 +1,44 @@
-// Minecraft/AntiAFK.js
 export default function startAntiAFK(client) {
-  console.log("🛡️ AntiAFK activado: el bot se mueve y salta automáticamente.");
+  console.log("🛡️ AntiAFK Bedrock activado: el bot se mueve y salta automáticamente.");
 
-  let direction = 1; // 1 = adelante, -1 = atrás
+  let toggle = false;
 
   setInterval(() => {
-    if (!client || !client.spawned) return;
+    if (!client?.player?.position) return;
 
-    // Mover hacia adelante o atrás
-    client.queue('move', { forward: direction });
+    const pos = client.player.position;
+    const newPos = { ...pos };
 
-    // Después de 2 segundos, detenerse
-    setTimeout(() => client.queue('move', { forward: 0 }), 2000);
+    // Alterna entre avanzar y retroceder un poco
+    newPos.z += toggle ? 0.3 : -0.3;
+    toggle = !toggle;
 
-    // Cambiar de dirección aleatoriamente
-    if (Math.random() < 0.3) direction *= -1;
+    // Simular movimiento (paquete MovePlayer)
+    client.write('move_player', {
+      runtime_id: client.entityId,
+      position: newPos,
+      pitch: 0,
+      yaw: Math.random() * 360,
+      head_yaw: Math.random() * 360,
+      mode: 0, // Normal
+      on_ground: true,
+      ridden_runtime_id: 0
+    });
 
-    // Saltar cada vez que se mueve
-    client.queue('jump', {});
+    // Simular salto ocasional
+    if (Math.random() < 0.4) {
+      const jumpPos = { ...newPos, y: newPos.y + 0.5 };
+      client.write('move_player', {
+        runtime_id: client.entityId,
+        position: jumpPos,
+        pitch: 0,
+        yaw: 0,
+        head_yaw: 0,
+        mode: 0,
+        on_ground: false,
+        ridden_runtime_id: 0
+      });
+    }
 
-  }, 5000); // cada 5 segundos
+  }, 5000); // Cada 5 segundos se mueve
 }
