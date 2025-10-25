@@ -1,44 +1,43 @@
 export default function startAntiAFK(client) {
-  console.log("🛡️ AntiAFK Bedrock activado: el bot se mueve y salta automáticamente.");
+  console.log("🛡️ AntiAFK Bedrock activado: esperando a que cargue el mundo...");
 
-  let toggle = false;
+  client.on("start_game", (packet) => {
+    console.log("✅ Bot dentro del mundo, iniciando AntiAFK...");
 
-  setInterval(() => {
-    if (!client?.player?.position) return;
+    let pos = packet.player_position;
+    let tick = BigInt(0);
 
-    const pos = client.player.position;
-    const newPos = { ...pos };
+    setInterval(() => {
+      tick += 1n;
 
-    // Alterna entre avanzar y retroceder un poco
-    newPos.z += toggle ? 0.3 : -0.3;
-    toggle = !toggle;
+      // Simula un pequeño movimiento y giro aleatorio
+      pos = {
+        x: pos.x + (Math.random() < 0.5 ? 0.3 : -0.3),
+        y: pos.y,
+        z: pos.z + (Math.random() < 0.5 ? 0.3 : -0.3),
+      };
 
-    // Simular movimiento (paquete MovePlayer)
-    client.write('move_player', {
-      runtime_id: client.entityId,
-      position: newPos,
-      pitch: 0,
-      yaw: Math.random() * 360,
-      head_yaw: Math.random() * 360,
-      mode: 0, // Normal
-      on_ground: true,
-      ridden_runtime_id: 0
-    });
+      const moveForward = Math.random() < 0.7;
+      const jump = Math.random() < 0.3;
 
-    // Simular salto ocasional
-    if (Math.random() < 0.4) {
-      const jumpPos = { ...newPos, y: newPos.y + 0.5 };
-      client.write('move_player', {
-        runtime_id: client.entityId,
-        position: jumpPos,
+      client.write("player_auth_input", {
+        position: pos,
+        motion: { x: 0, y: 0, z: 0 },
         pitch: 0,
-        yaw: 0,
-        head_yaw: 0,
-        mode: 0,
-        on_ground: false,
-        ridden_runtime_id: 0
+        yaw: Math.random() * 360,
+        input_data: {
+          ascend: false,
+          descend: false,
+          north_jump: moveForward,
+          jump_down: jump,
+        },
+        input_mode: 0,
+        play_mode: 0,
+        tick,
+        delta: { x: 0, y: 0, z: 0 },
       });
-    }
 
-  }, 5000); // Cada 5 segundos se mueve
+      console.log("🏃 Movimiento AntiAFK enviado:", moveForward ? "adelante" : "quieto");
+    }, 5000); // cada 5 segundos
+  });
 }
