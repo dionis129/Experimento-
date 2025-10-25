@@ -7,7 +7,7 @@ export default function startBot() {
 
     const client = createClient({
       host: "dionis169.aternos.me",
-      port: 14009,
+      port: 19132,
       username: "MiBotBedrock",
       offline: true,
       version: "1.21.111.1" // 👈 Versión agregada aquí
